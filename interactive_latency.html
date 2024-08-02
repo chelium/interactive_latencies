@@ -119,11 +119,16 @@
         // 125*10^6 = a*b^x
         // b = 2^(1/2)
         // -> a = 125*10^6 / 2^(2003.5)
-        var a = 125 * Math.pow(10,6) / Math.pow(2,shift(2003) * 0.5);
-        var b = Math.pow(2, 1.0/2);
-        var bw = a * Math.pow(b, shift(year));
-        // B/s * s/ns = B/ns
-        var ns = payloadBytes / (bw / Math.pow(10,9));
+        if (year <= 2003) {
+           var a = 125 * Math.pow(10,6) / Math.pow(2,shift(2003) * 0.5);
+           var b = Math.pow(2, 1.0/2);
+           var bw = a * Math.pow(b, shift(year));
+           // B/s * s/ns = B/ns
+           var ns = payloadBytes / (bw / Math.pow(10,9));
+        } else {
+           // commodity bandwidth still 1Gb/s
+           var ns = payloadBytes / 0.125;
+        }
         return ns;
     }
     function getBusTransmissionDelay(payloadBytes) {
